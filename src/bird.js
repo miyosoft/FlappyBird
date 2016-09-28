@@ -5,7 +5,6 @@
 var Bird = cc.Node.extend({
     bridSpriteSheet: null,
     birdSprite: null,
-    physicsBirdSprite: null,
     upDownAction: null,
     animateAction: null,
 
@@ -34,7 +33,8 @@ var Bird = cc.Node.extend({
         this.animateAction = new cc.RepeatForever(new cc.Animate(animation));
         this.upDownAction = new cc.RepeatForever(new cc.Sequence(new cc.MoveBy(0.4,0,10), new cc.MoveBy(0.4,0,-10)));
 
-        this.birdSprite = new cc.Sprite("#bird0.png");
+        this.birdSprite = new cc.PhysicsSprite("#bird0.png");
+        this.birdSprite.setBody(new cp.StaticBody());
         this.birdSprite.runAction(this.animateAction);
         this.birdSprite.runAction(this.upDownAction);
         this.birdSpriteSheet.addChild(this.birdSprite);
@@ -47,7 +47,8 @@ var Bird = cc.Node.extend({
                 var currentState = event.getUserData();
                 if(currentState == GameState.Play)
                 {
-                    target.initPhysics();
+                    target.birdSprite.stopAction(target.upDownAction);
+                    target.changeToDynamic();
                 }
             }
         });
@@ -56,11 +57,8 @@ var Bird = cc.Node.extend({
         this.scheduleUpdate();
     },
 
-    initPhysics:function(){
-        this.birdSpriteSheet.removeChild(this.birdSprite, true);
-
-        this.physicsBirdSprite = new cc.PhysicsSprite("#bird0.png");
-        var contentSize = this.physicsBirdSprite.getContentSize();
+    changeToDynamic:function(){
+        var contentSize = this.birdSprite.getContentSize();
         this.body = new cp.Body(1, cp.momentForBox(1, contentSize.width, contentSize.height));
         this.body.v_limit = g_birdVelLimit;
         this.space.addBody(this.body);
@@ -68,18 +66,15 @@ var Bird = cc.Node.extend({
         this.shape = new cp.BoxShape(this.body, contentSize.width, contentSize.height);
         this.space.addShape(this.shape);
 
-        this.physicsBirdSprite.setBody(this.body);
-        this.physicsBirdSprite.setIgnoreBodyRotation(true);
-
-        this.physicsBirdSprite.runAction(this.animateAction);
-        this.birdSpriteSheet.addChild(this.physicsBirdSprite);
+        this.birdSprite.setBody(this.body);
+        this.birdSprite.setIgnoreBodyRotation(true);
     },
 
     flapWings:function(){
         if(GameState.Current == GameState.Play)
         {
             this.body.applyImpulse(cp.v(0,g_birdVelLimit), cp.v(0,0));
-            this.physicsBirdSprite.runAction(cc.rotateTo(0.1, g_birdAngleMin));
+            this.birdSprite.runAction(cc.rotateTo(0.1, g_birdAngleMin));
         }
     },
 
@@ -89,10 +84,10 @@ var Bird = cc.Node.extend({
         {
             if(this.body.getVel().y < 0)
             {
-                var rotation = this.physicsBirdSprite.getRotation();
+                var rotation = this.birdSprite.getRotation();
                 rotation -= this.body.getVel().y * dt;
                 rotation = cc.clampf(rotation, g_birdAngleMin, g_birdAngleMax);
-                this.physicsBirdSprite.setRotation(rotation);
+                this.birdSprite.setRotation(rotation);
             }
         }
     },
