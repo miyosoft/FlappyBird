@@ -4,94 +4,20 @@
 
 var GamePlayScene = cc.Scene.extend({
     space:null,
-
-    initPhysics:function(){
-        this.space = new cp.Space();
-        this.space.gravity = cp.v(0, g_spaceGravity);
-    },
+    mainLayer:null,
+    gameOver:false,
 
     onEnter:function () {
         this._super();
         this.initPhysics();
-        this.addChild(new BackgroundLayer());
-        this.addChild(new GamePlayLayer(this.space));
-        this.scheduleUpdate();
-    },
 
-    update:function(dt){
-        this.space.step(dt);
-    }
-});
+        this.mainLayer = new cc.Layer();
 
-var GamePlayLayer = cc.Layer.extend({
-    status: 'ready',
-    bird: null,
-    ground: null,
-    scoreSprite: null,
-    tapSprite: null,
-    readySprite: null,
-    groundDeltaX: 0,
+        this.mainLayer.addChild(new BackgroundLayer(this.space), 0, TagOfLayer.Background);
+        this.mainLayer.addChild(new AnimationLayer(this.space), 0, TagOfLayer.Animation);
 
-    space: null,
-
-    ctor:function(space){
-        this._super();
-        this.space = space;
-        this.init();
-    },
-
-    init:function(){
-        this._super();
-
-        var centerPos = cc.p(cc.winSize.width/2, cc.winSize.height/2);
-
-        this.tapSprite = new cc.Sprite(res.tap_png);
-        this.tapSprite.setPosition(centerPos);
-
-        this.readySprite = new cc.Sprite(res.ready_png);
-        this.readySprite.setPosition(this.tapSprite.x, this.tapSprite.y + 100);
-
-        cc.spriteFrameCache.addSpriteFrames(res.score_plist);
-        this.scoreSprite = new cc.Sprite("#score0.png");
-        this.scoreSprite.setPosition(this.readySprite.x, this.readySprite.y + 80);
-
-        this.ground = new Ground(this.space);
-
-        this.bird = new Bird(this.space);
-        var birdPos = cc.p(this.tapSprite.x - this.tapSprite.width/2, this.tapSprite.y);
-        this.bird.setPosition(birdPos.x, birdPos.y);
-
-        this.addChild(this.tapSprite);
-        this.addChild(this.readySprite);
-        this.addChild(this.scoreSprite);
-        this.addChild(this.ground);
-        this.addChild(this.bird);
-
-        this.scheduleUpdate();
-    },
-
-    hideInstructions:function()
-    {
-        this.tapSprite.runAction(new cc.FadeTo(0.5, 0));
-        this.readySprite.runAction(new cc.FadeTo(0.5, 0));
-    },
-
-    setGameState:function(currentState)
-    {
-        GameState.Current = currentState;
-
-        var event = new cc.EventCustom("GameStateChanged");
-        event.setUserData(currentState);
-        cc.eventManager.dispatchEvent(event);
-
-        if(GameState.Current == GameState.Play)
-        {
-            this.hideInstructions();
-        }
-    },
-
-    onEnter:function(){
-      this._super();
+        this.addChild(this.mainLayer);
+        this.addChild(new StatusLayer(), 0, TagOfLayer.Status);
 
         cc.eventManager.addListener({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
@@ -99,19 +25,113 @@ var GamePlayLayer = cc.Layer.extend({
                 var target = event.getCurrentTarget();
                 if(GameState.Current == GameState.Ready) {
                     target.setGameState(GameState.Play)
-                    target.bird.flapWings();
+                    target.getMainLayer().getChildByTag(TagOfLayer.Animation).flapWings();
                 }
                 else if(GameState.Current == GameState.Play)
                 {
-                    target.bird.flapWings();
+                    target.getMainLayer().getChildByTag(TagOfLayer.Animation).flapWings();
                 }
             }
         }, this);
+
+        this.scheduleUpdate();
+    },
+
+    initPhysics:function(){
+        this.space = new cp.Space();
+
+        var ground = new cp.SegmentShape(this.space.staticBody,
+            cp.v(0, g_groundHeight),// start point
+            cp.v(4294967295, g_groundHeight),// MAX INT:4294967295
+            0);// thickness of wall
+
+        ground.setCollisionType(SpriteTag.Ground);
+        ground.setElasticity(0);
+        ground.setFriction(0);
+        this.space.addStaticShape(ground);
+
+        this.space.addCollisionHandler(SpriteTag.Bird, SpriteTag.Ground,
+            this.collisionGroundBegin.bind(this), null, null, null);
+        this.space.addCollisionHandler(SpriteTag.Bird, SpriteTag.Pipe,
+            this.collisionPipeBegin.bind(this), null, null, null);
+    },
+
+    collisionPipeBegin:function (arbiter, space) {
+        if(GameState.Current == GameState.Play)
+        {
+            if(arbiter.a.collision_type == SpriteTag.Bird)
+            {
+                arbiter.a.getBody().setVel(cp.v(0,0));
+            }
+            else
+            {
+                arbiter.b.getBody().setVel(cp.v(0,0));
+            }
+            this.hitEffect();
+            this.setGameState(GameState.GameOver);
+            this.addChild(new GameOverLayer(), 0, TagOfLayer.GameOver);
+        }
+        return false;
+    },
+
+    collisionGroundBegin:function (arbiter, space) {
+        if(GameState.Current == GameState.Play)
+        {
+            if(arbiter.a.collision_type == SpriteTag.Bird)
+            {
+                arbiter.a.getBody().setVel(cp.v(0,0));
+            }
+            else
+            {
+                arbiter.b.getBody().setVel(cp.v(0,0));
+            }
+            this.hitEffect();
+            this.setGameState(GameState.GameOver);
+            this.addChild(new GameOverLayer(), 0, TagOfLayer.GameOver);
+        }
+        return true;
+    },
+
+    hitEffect : function () {
+
+        var overlay = cc.LayerColor.create(
+            new cc.Color(255, 255, 255, 200),
+            cc.winSize.width,
+            cc.winSize.height
+        );
+
+        cc.director.getRunningScene().addChild(overlay, 4);
+
+        overlay.runAction(new cc.sequence(
+            cc.fadeOut(0.2),
+            cc.callFunc(function(target){
+                target.removeChild(overlay);
+            }, this)
+        ));
     },
 
     update : function(dt) {
-        this.groundDeltaX += g_groundMoveSpeed;
-        this.ground.setPositionX(-this.groundDeltaX);
-        this.ground.checkAndReload(this.groundDeltaX);
-    }
+        this.space.step(dt);
+
+        var animationLayer = this.mainLayer.getChildByTag(TagOfLayer.Animation);
+        var eyeX = animationLayer.getEyeX();
+
+        this.mainLayer.setPosition(cc.p(-eyeX,0));
+    },
+    getMainLayer:function(){
+        return this.mainLayer;
+    },
+
+    setGameState:function(currentState)
+    {
+        GameState.Current = currentState;
+
+        if(GameState.Current == GameState.Play)
+        {
+            this.getChildByTag(TagOfLayer.Status).hideInstructions();
+            this.getMainLayer().getChildByTag(TagOfLayer.Animation).stopBirdUpDownAction();
+            this.getMainLayer().getChildByTag(TagOfLayer.Background).setShouldLoadPipeObjects(true);
+            this.space.gravity = cp.v(0, g_spaceGravity);
+        }
+    },
 });

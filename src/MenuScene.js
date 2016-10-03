@@ -1,18 +1,40 @@
 
 var MenuScene = cc.Scene.extend({
+    space:null,
+    mainLayer:null,
     onEnter:function () {
         this._super();
-        this.addChild(new BackgroundLayer());
-        this.addChild(new MenuLayer());
+
+        this.space = new cp.Space();
+
+        this.mainLayer = new cc.Layer();
+
+        this.mainLayer.addChild(new BackgroundLayer(this.space), 0, TagOfLayer.Background);
+        this.mainLayer.addChild(new AnimationLayer(this.space), 0, TagOfLayer.Animation);
+
+        this.addChild(this.mainLayer);
+        this.addChild(new MenuLayer(), 0, TagOfLayer.Menu);
+        this.scheduleUpdate();
+    },
+
+    update : function(dt) {
+        this.space.step(dt);
+
+        var animationLayer = this.mainLayer.getChildByTag(TagOfLayer.Animation);
+        var eyeX = animationLayer.getEyeX();
+
+        this.mainLayer.setPosition(cc.p(-eyeX,0));
+    },
+
+    getMainLayer:function(){
+        return this.mainLayer;
     }
 });
 
 var MenuLayer = cc.Layer.extend({
-    ground: null,
-    bird: null,
     playBtn: null,
     rankBtn: null,
-    groundDeltaX: 0,
+
     ctor:function () {
         this._super();
         this.init();
@@ -23,13 +45,8 @@ var MenuLayer = cc.Layer.extend({
 
         var centerPos = cc.p(cc.winSize.width/2, cc.winSize.height/2);
 
-        this.ground = new Ground(null);
-
-        this.bird = new Bird(null);
-        this.bird.setPosition(centerPos);
-
         var gameNameSprite = new cc.Sprite(res.gameName_png);
-        gameNameSprite.setPosition(cc.winSize.width/2, cc.winSize.height/2 + 60);
+        gameNameSprite.setPosition(centerPos.x, centerPos.y + 60);
 
         var playBtnSprite = new cc.Sprite(res.playBtn_png);
         var rankBtnSprite = new cc.Sprite(res.rankBtn_png);
@@ -41,24 +58,21 @@ var MenuLayer = cc.Layer.extend({
         this.rankBtn.setPositionX(60);
 
         var menu = new cc.Menu(this.playBtn, this.rankBtn);
-        menu.setPosition(cc.winSize.width/2, this.bird.y - 115);
+        menu.setPosition(centerPos.x, centerPos.y - 115);
 
-        this.addChild(this.ground);
-        this.addChild(this.bird);
         this.addChild(gameNameSprite);
         this.addChild(menu);
+    },
 
-        this.scheduleUpdate();
+    onEnter:function()
+    {
+        this._super();
+        var animationLayer = this.getParent().getMainLayer().getChildByTag(TagOfLayer.Animation);
+        animationLayer.setBirdStartPos(cc.winSize.width/2, cc.winSize.height/2);
     },
 
     onPlay:function(){
         cc.director.runScene(new GamePlayScene());
-    },
-
-    update : function(dt) {
-        this.groundDeltaX += g_groundMoveSpeed;
-        this.ground.setPositionX(-this.groundDeltaX);
-        this.ground.checkAndReload(this.groundDeltaX);
     }
 });
 

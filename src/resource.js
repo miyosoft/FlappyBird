@@ -10,7 +10,13 @@ var res = {
     playBtn_png : "res/playBtn.png",
     rankBtn_png : "res/rankBtn.png",
     ready_png : "res/ready.png",
-    tap_png : "res/tap.png"
+    tap_png : "res/tap.png",
+    map00_tmx : "res/map00.tmx",
+    map01_tmx : "res/map01.tmx",
+    pipeUp_png: "res/pipeUp.png",
+    pipeDown_png: "res/pipeDown.png",
+    scoreboard_png: "res/scoreboard.png",
+    gameover_png: "res/gameover.png"
 };
 
 var g_resources = [];
