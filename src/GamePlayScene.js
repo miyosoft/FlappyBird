@@ -110,13 +110,31 @@ var GamePlayScene = cc.Scene.extend({
         ));
     },
 
+    checkBirdPassPipes:function()
+    {
+        var animationLayer = this.mainLayer.getChildByTag(TagOfLayer.Animation);
+        var backgroundLayer = this.mainLayer.getChildByTag(TagOfLayer.Background);
+
+        for (var i = 0; i < backgroundLayer.objects.length; i++) {
+            var object = backgroundLayer.objects[i];
+            if (object.pipeType == PipeType.Up && object.passed == false) {
+                if(animationLayer.getBirdLeftEdgeX() > object.getRightEdgeX())
+                {
+                    object.passed = true;
+                    this.getChildByTag(TagOfLayer.Status).addScore();
+                }
+            }
+        }
+    },
+
     update : function(dt) {
         this.space.step(dt);
 
         var animationLayer = this.mainLayer.getChildByTag(TagOfLayer.Animation);
         var eyeX = animationLayer.getEyeX();
-
         this.mainLayer.setPosition(cc.p(-eyeX,0));
+
+        this.checkBirdPassPipes();
     },
     getMainLayer:function(){
         return this.mainLayer;

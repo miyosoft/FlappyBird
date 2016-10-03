@@ -7,6 +7,9 @@ var Pipe = cc.Class.extend({
     sprite:null,
     shape:null,
     _mapIndex:0,// which map belongs to
+
+    pipeType:0,
+    passed:false,
     get mapIndex() {
         return this._mapIndex;
     },
@@ -21,8 +24,9 @@ var Pipe = cc.Class.extend({
      */
     ctor:function (layer, space, pos, pipeType, pipeWidth, pipeHeight) {
         this.space = space;
+        this.pipeType = pipeType;
 
-        if(pipeType == PipeType.Up)
+        if(this.pipeType == PipeType.Up)
         {
             this.sprite = new cc.PhysicsSprite(res.pipeUp_png, new cc.Rect(0, g_pipeTextureHeight - pipeHeight, g_pipeTextureWidth, pipeHeight));
         }
@@ -56,5 +60,10 @@ var Pipe = cc.Class.extend({
 
     getShape:function () {
         return this.shape;
-    }
+    },
+
+    getRightEdgeX:function(){
+        return this.sprite.getPositionX() + this.sprite.getBoundingBox().width/2;
+    },
+
 });

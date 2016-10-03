@@ -83,6 +83,10 @@ var AnimationLayer = cc.Layer.extend({
         return this.sprite.getPositionX() - this.birdStartX;
     },
 
+    getBirdLeftEdgeX:function(){
+        return this.sprite.getPositionX() - this.sprite.getContentSize().width/2;
+    },
+
     flapWings:function(){
         this.body.applyImpulse(cp.v(0,g_birdVelLimit), cp.v(0,0));
         this.sprite.runAction(cc.rotateTo(0.1, g_birdAngleMin));
