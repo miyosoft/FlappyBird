@@ -43,6 +43,10 @@ var StatusLayer = cc.Layer.extend({
         this.scoreLabel.setString(this.score.toString());
     },
 
+    getScore:function(){
+        return this.score;
+    },
+
     hideInstructions:function()
     {
         this.tapSprite.runAction(new cc.FadeTo(0.5, 0));

@@ -69,7 +69,7 @@ var GamePlayScene = cc.Scene.extend({
             }
             this.hitEffect();
             this.setGameState(GameState.GameOver);
-            this.addChild(new GameOverLayer(), 0, TagOfLayer.GameOver);
+            this.gameOver();
         }
         return false;
     },
@@ -87,9 +87,15 @@ var GamePlayScene = cc.Scene.extend({
             }
             this.hitEffect();
             this.setGameState(GameState.GameOver);
-            this.addChild(new GameOverLayer(), 0, TagOfLayer.GameOver);
+            this.gameOver();
         }
         return true;
+    },
+
+    gameOver:function(){
+        var score = this.getChildByTag(TagOfLayer.Status).getScore();
+        var gameOverLayer = new GameOverLayer(score);
+        this.addChild(gameOverLayer);
     },
 
     hitEffect : function () {

@@ -3,22 +3,28 @@
  */
 
 var GameOverLayer = cc.Layer.extend({
-    sprite:null,
     menu:null,
     gameOverSprite:null,
     scoreboardSprite:null,
+    scoreLabel:null,
+
     // constructor
-    ctor:function () {
+    ctor:function (score) {
         this._super();
-        this.init();
+        this.init(score);
     },
-    init:function () {
+    init:function (score) {
         this._super();
 
         var centerPos = cc.p(cc.winSize.width/2, cc.winSize.height/2);
 
         this.scoreboardSprite = new cc.Sprite(res.scoreboard_png);
         this.scoreboardSprite.setPosition(centerPos);
+
+        this.scoreLabel = new cc.LabelBMFont(score.toString(), res.flappyBird_fnt);
+        this.scoreLabel.setScale(0.5);
+        this.scoreLabel.setAnchorPoint(1, 0.5);
+        this.scoreLabel.setPosition(this.scoreboardSprite.getContentSize().width - 28, this.scoreboardSprite.getContentSize().height - 35);
 
         this.gameOverSprite = new cc.Sprite(res.gameover_png);
         this.gameOverSprite.setPosition(centerPos.x, centerPos.y + 100);
@@ -56,6 +62,7 @@ var GameOverLayer = cc.Layer.extend({
     },
 
     showScoreboard:function(){
+        this.scoreboardSprite.addChild(this.scoreLabel);
         this.addChild(this.scoreboardSprite);
 
         this.scoreboardSprite.runAction(new cc.Sequence(
