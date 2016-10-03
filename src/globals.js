@@ -5,6 +5,7 @@
 var g_spaceGravity = -700;
 
 var g_birdVelLimit = 400;
+var g_birdVelX = 150;
 var g_birdAngleMin = -25;
 var g_birdAngleMax = 90;
 

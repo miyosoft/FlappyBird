@@ -1750,8 +1750,6 @@ Body.prototype.velocity_func = function(gravity, damping, dt)
 	var w_limit = this.w_limit;
 	this.w = clamp(this.w*damping + this.t*this.i_inv*dt, -w_limit, w_limit);
 
-	this.resetForces(); //vu.truong add this to reset forces
-
 	this.sanityCheck();
 };
 

@@ -35,8 +35,8 @@ var AnimationLayer = cc.Layer.extend({
         var radius = this.sprite.getContentSize().width / 2;
 
         this.body = new cp.Body(1, cp.momentForCircle(1, 0, radius, cp.vzero));
-        this.body.v_limit = g_birdVelLimit;
-        this.body.applyImpulse(cp.v(150, 0), cp.v(0, 0));//run speed
+        this.body.velocity_func = this.updateBirdVelocity;
+        this.body.applyImpulse(cp.v(g_birdVelX, 0), cp.v(0, 0));//run speed
         this.space.addBody(this.body);
 
         this.shape = new cp.CircleShape(this.body, radius, cp.vzero);
@@ -53,6 +53,17 @@ var AnimationLayer = cc.Layer.extend({
         this.spriteSheet.addChild(this.sprite);
 
         this.scheduleUpdate();
+    },
+
+    updateBirdVelocity:function(gravity, damping, dt)
+    {
+        var vx = this.vx + gravity.x * dt;
+        var vy = this.vy + gravity.y * dt;
+
+        var scaleX = (vx > g_birdVelLimit) ? g_birdVelLimit / Math.abs(vx) : 1;
+        var scaleY = (vy > g_birdVelLimit) ? g_birdVelLimit / Math.abs(vy) : 1;
+        this.vx = vx * scaleX;
+        this.vy = vy * scaleY;
     },
 
     stopBirdUpDownAction:function()
@@ -111,6 +122,7 @@ var AnimationLayer = cc.Layer.extend({
     },
 
     update:function(dt){
+
         this.rotateOnFall(dt);
     }
 
