@@ -5,10 +5,10 @@
 var GamePlayScene = cc.Scene.extend({
     space:null,
     mainLayer:null,
-    gameOver:false,
 
     onEnter:function () {
         this._super();
+
         this.initPhysics();
 
         this.mainLayer = new cc.Layer();
@@ -94,7 +94,7 @@ var GamePlayScene = cc.Scene.extend({
 
     hitEffect : function () {
 
-        var overlay = cc.LayerColor.create(
+        var overlay = new cc.LayerColor(
             new cc.Color(255, 255, 255, 200),
             cc.winSize.width,
             cc.winSize.height

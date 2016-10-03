@@ -68,6 +68,7 @@ var GameOverLayer = cc.Layer.extend({
         this.addChild(this.menu);
     },
     onPlay:function (sender) {
+        GameState.Current = GameState.Ready;
         cc.director.runScene(new GamePlayScene());
     }
 });
