@@ -9,14 +9,16 @@ var BackgroundLayer = cc.Layer.extend({
     mapIndex:0,
     space:null,
     spriteSheet:null,
-    objects:[],
+    pipeUpObjects:[],
+	pipeDownObjects:[],
 
     shouldLoadPipeObjects: false,
 
     ctor:function (space) {
         this._super();
 
-        this.objects = [];
+        this.pipeUpObjects = [];
+		this.pipeDownObjects = [];
         this.space = space;
 
         this.init();
@@ -53,7 +55,7 @@ var BackgroundLayer = cc.Layer.extend({
                 PipeType.Up,
                 width, height);
             pipe.mapIndex = mapIndex;
-            this.objects.push(pipe);
+            this.pipeUpObjects.push(pipe);
         }
 
         var pipeDownGroup = map.getObjectGroup("PipeDown");
@@ -71,31 +73,26 @@ var BackgroundLayer = cc.Layer.extend({
                 width,
                 height);
             pipe.mapIndex = mapIndex;
-            this.objects.push(pipe);
+            this.pipeDownObjects.push(pipe);
         }
     },
 
     removeObjects:function (mapIndex) {
-        while((function (obj, index) {
-            for (var i = 0; i < obj.length; i++) {
-                if (obj[i].mapIndex == index) {
-                    obj[i].removeFromParent();
-                    obj.splice(i, 1);
-                    return true;
-                }
-            }
-            return false;
-        })(this.objects, mapIndex));
-    },
-
-    removeObjectByShape:function (shape) {
-        for (var i = 0; i < this.objects.length; i++) {
-            if (this.objects[i].getShape() == shape) {
-                this.objects[i].removeFromParent();
-                this.objects.splice(i, 1);
-                break;
-            }
-        }
+		for(var i = this.pipeUpObjects.length - 1; i >= 0; i--){
+			var object = this.pipeUpObjects[i];
+			if(object.mapIndex == mapIndex){
+				object.removeFromParent();
+				this.pipeUpObjects.splice(i,1);
+			}
+		}
+		
+		for(var i = this.pipeDownObjects.length - 1; i >= 0; i--){
+			var object = this.pipeDownObjects[i];
+			if(object.mapIndex == mapIndex){
+				object.removeFromParent();
+				this.pipeDownObjects.splice(i,1);
+			}
+		}
     },
 
     setShouldLoadPipeObjects:function (shouldLoadPipeObjects)
