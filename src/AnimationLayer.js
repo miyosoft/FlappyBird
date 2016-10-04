@@ -99,6 +99,7 @@ var AnimationLayer = cc.Layer.extend({
     },
 
     flapWings:function(){
+        cc.audioEngine.playEffect(res.sfx_wing_ogg);
         this.body.applyImpulse(cp.v(0,g_birdVelLimit), cp.v(0,0));
         this.sprite.runAction(cc.rotateTo(0.1, g_birdAngleMin));
     },

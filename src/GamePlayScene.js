@@ -68,7 +68,6 @@ var GamePlayScene = cc.Scene.extend({
                 arbiter.b.getBody().setVel(cp.v(0,0));
             }
             this.hitEffect();
-            this.setGameState(GameState.GameOver);
             this.gameOver();
         }
         return false;
@@ -86,19 +85,22 @@ var GamePlayScene = cc.Scene.extend({
                 arbiter.b.getBody().setVel(cp.v(0,0));
             }
             this.hitEffect();
-            this.setGameState(GameState.GameOver);
             this.gameOver();
         }
         return true;
     },
 
     gameOver:function(){
+        cc.audioEngine.playEffect(res.sfx_die_ogg);
+        this.setGameState(GameState.GameOver);
         var score = this.getChildByTag(TagOfLayer.Status).getScore();
         var gameOverLayer = new GameOverLayer(score);
         this.addChild(gameOverLayer);
     },
 
     hitEffect : function () {
+
+        cc.audioEngine.playEffect(res.sfx_hit_ogg);
 
         var overlay = new cc.LayerColor(
             new cc.Color(255, 255, 255, 200),
@@ -126,6 +128,7 @@ var GamePlayScene = cc.Scene.extend({
             if (object.pipeType == PipeType.Up && object.passed == false) {
                 if(animationLayer.getBirdLeftEdgeX() > object.getRightEdgeX())
                 {
+                    cc.audioEngine.playEffect(res.sfx_point_ogg);
                     object.passed = true;
                     this.getChildByTag(TagOfLayer.Status).addScore();
                 }

@@ -14,8 +14,16 @@ var res = {
     pipeUp_png: "res/images/pipeUp.png",
     pipeDown_png: "res/images/pipeDown.png",
     scoreboard_png: "res/images/scoreboard.png",
+    newBest_png: "res/images/new.png",
     gameover_png: "res/images/gameover.png",
-    flappyBird_fnt: "res/fonts/flappyBird.fnt"
+    medal_png: "res/images/medal.png",
+    medal_plist: "res/images/medal.plist",
+    flappyBird_fnt: "res/fonts/flappyBird.fnt",
+    sfx_swooshing_ogg : "res/sounds/sfx_swooshing.ogg",
+    sfx_wing_ogg : "res/sounds/sfx_wing.ogg",
+    sfx_hit_ogg : "res/sounds/sfx_hit.ogg",
+    sfx_point_ogg : "res/sounds/sfx_point.ogg",
+    sfx_die_ogg : "res/sounds/sfx_die.ogg"
 };
 
 var g_resources = [];
