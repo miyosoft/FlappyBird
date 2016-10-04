@@ -124,12 +124,12 @@ var GamePlayScene = cc.Scene.extend({
         var backgroundLayer = this.mainLayer.getChildByTag(TagOfLayer.Background);
 
         for (var i = 0; i < backgroundLayer.pipeUpObjects.length; i++) {
-            var object = backgroundLayer.pipeUpObjects[i];
-            if (object.pipeType == PipeType.Up && object.passed == false) {
-                if(animationLayer.getBirdLeftEdgeX() > object.getRightEdgeX())
+            var pipe = backgroundLayer.pipeUpObjects[i];
+            if (pipe.pipeType == PipeType.Up && pipe.passed == false) {
+                if(animationLayer.getBirdLeftEdgeX() > pipe.getLeftEdgeX())
                 {
                     cc.audioEngine.playEffect(res.sfx_point_ogg);
-                    object.passed = true;
+                    pipe.passed = true;
                     this.getChildByTag(TagOfLayer.Status).addScore();
                 }
             }
@@ -140,8 +140,8 @@ var GamePlayScene = cc.Scene.extend({
         this.space.step(dt);
 
         var animationLayer = this.mainLayer.getChildByTag(TagOfLayer.Animation);
-        var eyeX = animationLayer.getEyeX();
-        this.mainLayer.setPosition(cc.p(-eyeX,0));
+        var distanceX = animationLayer.getDistanceX();
+        this.mainLayer.setPosition(cc.p(-distanceX,0));
 
         this.checkBirdPassPipes();
     },

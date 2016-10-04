@@ -28,11 +28,11 @@ var Pipe = cc.Class.extend({
 
         if(this.pipeType == PipeType.Up)
         {
-            this.sprite = new cc.PhysicsSprite(res.pipeUp_png, new cc.Rect(0, g_pipeTextureHeight - pipeHeight, g_pipeTextureWidth, pipeHeight));
+            this.sprite = new cc.PhysicsSprite(res.pipe_up_png, new cc.Rect(0, g_pipeTextureHeight - pipeHeight, g_pipeTextureWidth, pipeHeight));
         }
         else
         {
-            this.sprite = new cc.PhysicsSprite(res.pipeDown_png, new cc.Rect(0,0,g_pipeTextureWidth,pipeHeight));
+            this.sprite = new cc.PhysicsSprite(res.pipe_down_png, new cc.Rect(0,0,g_pipeTextureWidth,pipeHeight));
         }
         this.sprite.setScaleX(pipeWidth/this.sprite.getContentSize().width);
 
@@ -62,8 +62,8 @@ var Pipe = cc.Class.extend({
         return this.shape;
     },
 
-    getRightEdgeX:function(){
-        return this.sprite.getPositionX() + this.sprite.getBoundingBox().width/2;
+    getLeftEdgeX:function(){
+        return this.sprite.getPositionX() - this.sprite.getBoundingBox().width/2;
     },
 
 });

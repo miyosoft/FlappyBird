@@ -90,7 +90,7 @@ var AnimationLayer = cc.Layer.extend({
         this.body.setPos(new cp.v(x, y));
     },
 
-    getEyeX:function () {
+    getDistanceX:function () {
         return this.sprite.getPositionX() - this.birdStartX;
     },
 

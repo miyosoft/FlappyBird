@@ -21,9 +21,9 @@ var MenuScene = cc.Scene.extend({
         this.space.step(dt);
 
         var animationLayer = this.mainLayer.getChildByTag(TagOfLayer.Animation);
-        var eyeX = animationLayer.getEyeX();
+        var distanceX = animationLayer.getDistanceX();
 
-        this.mainLayer.setPosition(cc.p(-eyeX,0));
+        this.mainLayer.setPosition(cc.p(-distanceX,0));
     },
 
     getMainLayer:function(){
@@ -45,11 +45,11 @@ var MenuLayer = cc.Layer.extend({
 
         var centerPos = cc.p(cc.winSize.width/2, cc.winSize.height/2);
 
-        var gameNameSprite = new cc.Sprite(res.gameName_png);
-        gameNameSprite.setPosition(centerPos.x, centerPos.y + 60);
+        var gameTitleSprite = new cc.Sprite(res.game_title_png);
+        gameTitleSprite.setPosition(centerPos.x, centerPos.y + 60);
 
-        var playBtnSprite = new cc.Sprite(res.playBtn_png);
-        var rankBtnSprite = new cc.Sprite(res.rankBtn_png);
+        var playBtnSprite = new cc.Sprite(res.play_button_png);
+        var rankBtnSprite = new cc.Sprite(res.rank_button_png);
 
         this.playBtn = new cc.MenuItemSprite(playBtnSprite,null,this.onPlay, this);
         this.playBtn.setPositionX(-60);
@@ -60,7 +60,7 @@ var MenuLayer = cc.Layer.extend({
         var menu = new cc.Menu(this.playBtn, this.rankBtn);
         menu.setPosition(centerPos.x, centerPos.y - 115);
 
-        this.addChild(gameNameSprite);
+        this.addChild(gameTitleSprite);
         this.addChild(menu);
     },
 

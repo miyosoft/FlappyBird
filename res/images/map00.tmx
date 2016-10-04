@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="15" tilewidth="32" tileheight="32" nextobjectid="6">
  <tileset firstgid="1" name="dayBG" tilewidth="32" tileheight="32" tilecount="120" columns="8">
-  <image source="dayBG.png" width="287" height="511"/>
+  <image source="background.png" width="287" height="511"/>
  </tileset>
  <tileset firstgid="121" name="ground" tilewidth="32" tileheight="32" tilecount="30" columns="10">
   <image source="ground.png" width="336" height="111"/>

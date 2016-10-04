@@ -12,7 +12,7 @@ var BackgroundLayer = cc.Layer.extend({
     pipeUpObjects:[],
 	pipeDownObjects:[],
 
-    shouldLoadPipeObjects: false,
+    shouldLoadPipes: false,
 
     ctor:function (space) {
         this._super();
@@ -39,7 +39,7 @@ var BackgroundLayer = cc.Layer.extend({
         this.scheduleUpdate();
     },
 
-    loadObjects:function (map, mapIndex) {
+    loadPipes:function (map, mapIndex) {
 
         var pipeUpGroup = map.getObjectGroup("PipeUp");
         var pipeUpArray = pipeUpGroup.getObjects();
@@ -60,11 +60,11 @@ var BackgroundLayer = cc.Layer.extend({
 
         var pipeDownGroup = map.getObjectGroup("PipeDown");
         var pipeDownArray = pipeDownGroup.getObjects();
-        for (var i = 0; i < pipeDownArray.length; i++) {
-            var x = pipeDownArray[i]["x"];
-            var y = pipeDownArray[i]["y"];
-            var width = pipeDownArray[i]["width"];
-            var height = pipeDownArray[i]["height"];
+        for (var j = 0; j < pipeDownArray.length; j++) {
+            var x = pipeDownArray[j]["x"];
+            var y = pipeDownArray[j]["y"];
+            var width = pipeDownArray[j]["width"];
+            var height = pipeDownArray[j]["height"];
 
             var pipe = new Pipe(this,
                 this.space,
@@ -77,31 +77,31 @@ var BackgroundLayer = cc.Layer.extend({
         }
     },
 
-    removeObjects:function (mapIndex) {
+    removePipes:function (mapIndex) {
 		for(var i = this.pipeUpObjects.length - 1; i >= 0; i--){
-			var object = this.pipeUpObjects[i];
-			if(object.mapIndex == mapIndex){
-				object.removeFromParent();
+			var pipe = this.pipeUpObjects[i];
+			if(pipe.mapIndex == mapIndex){
+				pipe.removeFromParent();
 				this.pipeUpObjects.splice(i,1);
 			}
 		}
-		
-		for(var i = this.pipeDownObjects.length - 1; i >= 0; i--){
-			var object = this.pipeDownObjects[i];
-			if(object.mapIndex == mapIndex){
-				object.removeFromParent();
-				this.pipeDownObjects.splice(i,1);
+
+		for(var j = this.pipeDownObjects.length - 1; j >= 0; j--){
+			var pipe = this.pipeDownObjects[j];
+			if(pipe.mapIndex == mapIndex){
+				pipe.removeFromParent();
+				this.pipeDownObjects.splice(j,1);
 			}
 		}
     },
 
     setShouldLoadPipeObjects:function (shouldLoadPipeObjects)
     {
-        this.shouldLoadPipeObjects = shouldLoadPipeObjects;
+        this.shouldLoadPipes = shouldLoadPipeObjects;
     },
 
-    checkAndReload:function (eyeX) {
-        var newMapIndex = parseInt(eyeX / this.mapWidth);
+    checkAndReload:function (distanceX) {
+        var newMapIndex = parseInt(distanceX / this.mapWidth);
         if (this.mapIndex == newMapIndex) {
             return false;
         }
@@ -109,19 +109,19 @@ var BackgroundLayer = cc.Layer.extend({
         if (0 == newMapIndex % 2) {
             // change mapSecond
             this.map01.setPositionX(this.mapWidth * (newMapIndex + 1));
-            if(this.shouldLoadPipeObjects)
-                this.loadObjects(this.map01, newMapIndex + 1);
+            if(this.shouldLoadPipes)
+                this.loadPipes(this.map01, newMapIndex + 1);
 
         } else {
             // change mapFirst
             this.map00.setPositionX(this.mapWidth * (newMapIndex + 1));
-            if(this.shouldLoadPipeObjects)
-                this.loadObjects(this.map00, newMapIndex + 1);
+            if(this.shouldLoadPipes)
+                this.loadPipes(this.map00, newMapIndex + 1);
 
         }
 
-        if(this.shouldLoadPipeObjects)
-            this.removeObjects(newMapIndex - 1);
+        if(this.shouldLoadPipes)
+            this.removePipes(newMapIndex - 1);
 
         this.mapIndex = newMapIndex;
 
@@ -130,8 +130,8 @@ var BackgroundLayer = cc.Layer.extend({
 
     update:function (dt) {
         var animationLayer = this.getParent().getChildByTag(TagOfLayer.Animation);
-        var eyeX = animationLayer.getEyeX();
-        this.checkAndReload(eyeX);
+        var distanceX = animationLayer.getDistanceX();
+        this.checkAndReload(distanceX);
 
     }
 });

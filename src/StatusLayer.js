@@ -24,7 +24,7 @@ var StatusLayer = cc.Layer.extend({
         this.readySprite = new cc.Sprite(res.ready_png);
         this.readySprite.setPosition(centerPos.x, centerPos.y + 100);
 
-        this.scoreLabel = new cc.LabelBMFont("0", res.flappyBird_fnt);
+        this.scoreLabel = new cc.LabelBMFont("0", res.score_fnt);
         this.scoreLabel.setPosition(centerPos.x, this.readySprite.y + 80);
 
         this.addChild(this.tapSprite);
