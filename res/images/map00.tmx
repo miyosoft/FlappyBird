@@ -45,11 +45,11 @@
 </data>
  </layer>
  <objectgroup name="PipeDown">
-  <object id="1" x="64" y="320" width="64" height="64"/>
-  <object id="4" x="224" y="288" width="64" height="96"/>
+  <object id="1" x="64" y="320" width="52" height="64"/>
+  <object id="4" x="224" y="288" width="52" height="96"/>
  </objectgroup>
  <objectgroup name="PipeUp">
-  <object id="3" x="64" y="0" width="64" height="224"/>
-  <object id="5" x="224" y="0" width="64" height="192"/>
+  <object id="3" x="64" y="0" width="52" height="224"/>
+  <object id="5" x="224" y="0" width="52" height="192"/>
  </objectgroup>
 </map>
