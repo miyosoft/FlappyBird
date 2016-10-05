@@ -59,7 +59,8 @@ var GameOverLayer = cc.Layer.extend({
                 this.shineSprite.setPosition(randX, randY);
             }, this)
         );
-        this.medalSprite.addChild(this.shineSprite);
+        this.shineSpriteSheet.addChild(this.shineSprite);
+        this.medalSprite.addChild(this.shineSpriteSheet);
 
         this.scoreLabel = new cc.LabelBMFont("0", res.score_fnt);
         this.scoreLabel.setScale(0.5);
