@@ -160,5 +160,9 @@ var GamePlayScene = cc.Scene.extend({
             this.getMainLayer().getChildByTag(TagOfLayer.Background).setShouldLoadPipeObjects(true);
             this.space.gravity = cp.v(0, g_spaceGravity);
         }
+        else if(GameState.Current == GameState.GameOver)
+        {
+            this.getMainLayer().getChildByTag(TagOfLayer.Animation).stopBirdAllAction();
+        }
     },
 });

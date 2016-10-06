@@ -2,10 +2,10 @@
  * Created by vutruong on 9/24/2016.
  */
 
-var g_spaceGravity = -700;
+var g_spaceGravity = -1000;
 
-var g_birdVelLimit = 400;
-var g_birdVelX = 150;
+var g_birdVelY = 300;
+var g_birdVelX = 140;
 var g_birdAngleMin = -25;
 var g_birdAngleMax = 90;
 
