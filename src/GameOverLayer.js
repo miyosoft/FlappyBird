@@ -32,10 +32,12 @@ var GameOverLayer = cc.Layer.extend({
 
         this.scoreboardSprite = new cc.Sprite(res.scoreboard_png);
         this.scoreboardSprite.setPosition(centerPos);
+        this.scoreboardSprite.retain();
 
         cc.spriteFrameCache.addSpriteFrames(res.medal_plist);
         this.medalSprite = new cc.Sprite("#bronze.png");
         this.medalSprite.setPosition(54, this.scoreboardSprite.getContentSize().height/2 - 4);
+        this.medalSprite.retain();
 
         cc.spriteFrameCache.addSpriteFrames(res.shine_plist);
         this.shineSpriteSheet = new cc.SpriteBatchNode(res.shine_png);
@@ -66,18 +68,22 @@ var GameOverLayer = cc.Layer.extend({
         this.scoreLabel.setScale(0.5);
         this.scoreLabel.setAnchorPoint(1, 0.5);
         this.scoreLabel.setPosition(this.scoreboardSprite.getContentSize().width - 28, this.scoreboardSprite.getContentSize().height/2 + 28);
+        this.scoreLabel.retain();
 
         this.bestScoreLabel = new cc.LabelBMFont(this.lastBestScore.toString(), res.score_fnt);
         this.bestScoreLabel.setScale(0.5);
         this.bestScoreLabel.setAnchorPoint(1, 0.5);
         this.bestScoreLabel.setPosition(this.scoreboardSprite.getContentSize().width - 28, this.scoreboardSprite.getContentSize().height/2 - 14);
+        this.bestScoreLabel.retain();
 
         this.newBestSprite = new cc.Sprite(res.new_best_png);
         this.newBestSprite.setAnchorPoint(1, 0.5);
         this.newBestSprite.setPosition(this.scoreboardSprite.getContentSize().width - 65, this.scoreboardSprite.getContentSize().height/2 - 4);
+        this.newBestSprite.retain();
 
         this.gameOverSprite = new cc.Sprite(res.game_over_png);
         this.gameOverSprite.setPosition(centerPos.x, centerPos.y + 100);
+        this.gameOverSprite.retain();
 
         var playBtnSprite = new cc.Sprite(res.play_button_png);
         var rankBtnSprite = new cc.Sprite(res.rank_button_png);
@@ -90,6 +96,7 @@ var GameOverLayer = cc.Layer.extend({
 
         this.menu = new cc.Menu(playBtn, rankBtn);
         this.menu.setPosition(centerPos.x, centerPos.y - 115);
+        this.menu.retain();
 
         var action = new cc.Sequence(
             new cc.DelayTime(0.5),
@@ -173,7 +180,7 @@ var GameOverLayer = cc.Layer.extend({
 
             this.bestScoreLabel.runAction(new cc.RepeatForever(incrementSeq));
             this.scoreboardSprite.addChild(this.newBestSprite);
-            cc.sys.localStorage.setItem("bestScore", this.score);
+            cc.sys.localStorage.setItem("bestScore", this.score.toString());
         }
 
         if(this.score >= 10)
@@ -209,5 +216,15 @@ var GameOverLayer = cc.Layer.extend({
         cc.audioEngine.playEffect(res.sfx_swooshing_ogg);
         GameState.Current = GameState.Ready;
         cc.director.runScene(new GamePlayScene());
+    },
+    onExit:function(){
+        this.scoreLabel.release();
+        this.bestScoreLabel.release();
+        this.menu.release();
+        this.gameOverSprite.release();
+        this.scoreboardSprite.release();
+        this.newBestSprite.release();
+        this.medalSprite.release();
+        this._super();
     }
 });

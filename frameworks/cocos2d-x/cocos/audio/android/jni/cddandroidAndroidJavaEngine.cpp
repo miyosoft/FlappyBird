@@ -54,7 +54,7 @@ AndroidJavaEngine::AndroidJavaEngine()
         __android_log_print(ANDROID_LOG_DEBUG, "cocos2d", "android SDK version:%d", sdkVer);
         if (sdkVer == 21)
         {
-            _implementBaseOnAudioEngine = true;
+            _implementBaseOnAudioEngine = false; //vu.truong fix audio performance in android-21
         }
     }
     else

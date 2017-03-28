@@ -14,6 +14,7 @@ var AnimationLayer = cc.Layer.extend({
     animateAction: null,
 
     lastBirdFlapY:0,
+    isFall:false,
 
     ctor:function (space) {
         this._super();
@@ -45,7 +46,6 @@ var AnimationLayer = cc.Layer.extend({
         this.space.addShape(this.shape);
 
         this.sprite.setBody(this.body);
-        this.sprite.setIgnoreBodyRotation(true);
         this.sprite.runAction(this.animateAction);
         this.sprite.runAction(this.upDownAction);
 
@@ -89,26 +89,30 @@ var AnimationLayer = cc.Layer.extend({
     flapWings:function(){
         cc.audioEngine.playEffect(res.sfx_wing_ogg);
         this.body.setVel(cp.v(this.body.vx, g_birdVelY));
-        this.sprite.runAction(cc.rotateTo(0.1, g_birdAngleMin));
-        this.lastBirdFlapY = this.sprite.y;
     },
 
-    rotateOnFall:function(dt){
+    rotateBird:function(dt){
         var rotation = this.sprite.getRotation();
-        var currentBirdFlapY = this.sprite.y;
 
-        if(currentBirdFlapY <= this.lastBirdFlapY && rotation < g_birdAngleMax)
+        if(this.body.getVel().y >= 0)
         {
-            rotation -= this.body.getVel().y * dt * 2;
+            this.isFall = false;
+            rotation -= this.body.getVel().y * dt * 4;
+            rotation = cc.clampf(rotation, g_birdAngleMin, g_birdAngleMax);
+            this.sprite.setRotation(rotation);
         }
-
-        if(GameState.Current == GameState.GameOver && rotation < g_birdAngleMax)
+        else
         {
-            rotation += 10;
-        }
+            if(rotation <= g_birdAngleMin)
+                this.isFall = true;
 
-        rotation = cc.clampf(rotation, g_birdAngleMin, g_birdAngleMax);
-        this.sprite.setRotation(rotation);
+            if(this.isFall)
+            {
+                rotation -= this.body.getVel().y * dt;
+                rotation = cc.clampf(rotation, g_birdAngleMin, g_birdAngleMax);
+                this.sprite.setRotation(rotation);
+            }
+        }
     },
 
     stopBirdAllAction:function(){
@@ -116,7 +120,9 @@ var AnimationLayer = cc.Layer.extend({
     },
 
     update:function(dt){
-        this.rotateOnFall(dt);
+        if(GameState.Current == GameState.Play)
+            this.rotateBird(dt);
+        else if(GameState.Current == GameState.GameOver)
+            this.sprite.setRotation(g_birdAngleMax);
     }
-
 });

@@ -224,6 +224,11 @@ cp.Space.prototype.addStaticShape = function(shape) {
         this.addShape(shape);
 }
 
+//vu.truong fix can't remove static shape
+cp.Space.prototype.removeStaticShape = function(shape) {
+    this.removeShape(shape);
+}
+
 // Joints
 cp.PinJoint.prototype.getAnchr1 = function() {
     return this.getAnchorA();
@@ -260,11 +265,6 @@ cp.DampedSpring.prototype.getAnchr1 = function() {
 cp.DampedSpring.prototype.getAnchr2 = function() {
     return this.getAnchorB();
 };
-
-cp.Space.prototype.addStaticShape = function(shape) {
-    this.addShape(shape);
-};
-
 
 // END OF CHIPMUNK V6.2 COMPATIBILIY
 

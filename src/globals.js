@@ -12,6 +12,7 @@ var g_birdAngleMax = 90;
 var g_groundHeight = 96;
 var g_pipeTextureWidth = 52;
 var g_pipeTextureHeight = 320;
+var g_maxSoundEffects = 24;
 
 if(typeof GameState == "undefined") {
     var GameState = {};

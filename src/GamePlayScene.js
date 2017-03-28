@@ -59,14 +59,8 @@ var GamePlayScene = cc.Scene.extend({
     collisionPipeBegin:function (arbiter, space) {
         if(GameState.Current == GameState.Play)
         {
-            if(arbiter.a.collision_type == SpriteTag.Bird)
-            {
-                arbiter.a.getBody().setVel(cp.v(0,0));
-            }
-            else
-            {
-                arbiter.b.getBody().setVel(cp.v(0,0));
-            }
+            var shapes = arbiter.getShapes();
+            shapes[0].getBody().setVel(cp.v(0,0));
             this.hitEffect();
             this.gameOver();
         }
@@ -76,14 +70,8 @@ var GamePlayScene = cc.Scene.extend({
     collisionGroundBegin:function (arbiter, space) {
         if(GameState.Current == GameState.Play)
         {
-            if(arbiter.a.collision_type == SpriteTag.Bird)
-            {
-                arbiter.a.getBody().setVel(cp.v(0,0));
-            }
-            else
-            {
-                arbiter.b.getBody().setVel(cp.v(0,0));
-            }
+            var shapes = arbiter.getShapes();
+            shapes[0].getBody().setVel(cp.v(0,0));
             this.hitEffect();
             this.gameOver();
         }
@@ -99,7 +87,6 @@ var GamePlayScene = cc.Scene.extend({
     },
 
     hitEffect : function () {
-
         cc.audioEngine.playEffect(res.sfx_hit_ogg);
 
         var overlay = new cc.LayerColor(
@@ -110,7 +97,7 @@ var GamePlayScene = cc.Scene.extend({
 
         cc.director.getRunningScene().addChild(overlay, 4);
 
-        overlay.runAction(new cc.sequence(
+        overlay.runAction(new cc.Sequence(
             cc.fadeOut(0.2),
             cc.callFunc(function(target){
                 target.removeChild(overlay);
