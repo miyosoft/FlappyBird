@@ -3,10 +3,10 @@
  */
 
 var GamePlayScene = cc.Scene.extend({
-    space:null,
-    mainLayer:null,
+    space: null,
+    mainLayer: null,
 
-    onEnter:function () {
+    onEnter: function () {
         this._super();
 
         this.initPhysics();
@@ -21,14 +21,13 @@ var GamePlayScene = cc.Scene.extend({
 
         cc.eventManager.addListener({
             event: cc.EventListener.TOUCH_ONE_BY_ONE,
-            onTouchBegan: function(touch, event){
+            onTouchBegan: function (touch, event) {
                 var target = event.getCurrentTarget();
-                if(GameState.Current == GameState.Ready) {
-                    target.setGameState(GameState.Play)
+                if (GameState.Current == GameState.Ready) {
+                    target.setGameState(GameState.Play);
                     target.getMainLayer().getChildByTag(TagOfLayer.Animation).flapWings();
                 }
-                else if(GameState.Current == GameState.Play)
-                {
+                else if (GameState.Current == GameState.Play) {
                     target.getMainLayer().getChildByTag(TagOfLayer.Animation).flapWings();
                 }
             }
@@ -37,7 +36,7 @@ var GamePlayScene = cc.Scene.extend({
         this.scheduleUpdate();
     },
 
-    initPhysics:function(){
+    initPhysics: function () {
         this.space = new cp.Space();
 
         var ground = new cp.SegmentShape(this.space.staticBody,
@@ -56,29 +55,31 @@ var GamePlayScene = cc.Scene.extend({
             this.collisionPipeBegin.bind(this), null, null, null);
     },
 
-    collisionPipeBegin:function (arbiter, space) {
-        if(GameState.Current == GameState.Play)
-        {
+    collisionPipeBegin: function (arbiter, space) {
+        if (GameState.Current == GameState.Play) {
             var shapes = arbiter.getShapes();
-            shapes[0].getBody().setVel(cp.v(0,0));
+            shapes[0].getBody().setVel(cp.v(0, 0));
             this.hitEffect();
             this.gameOver();
         }
         return false;
     },
 
-    collisionGroundBegin:function (arbiter, space) {
-        if(GameState.Current == GameState.Play)
-        {
+    collisionGroundBegin: function (arbiter, space) {
+        if (GameState.Current == GameState.Play) {
             var shapes = arbiter.getShapes();
-            shapes[0].getBody().setVel(cp.v(0,0));
+            shapes[0].getBody().setVel(cp.v(0, 0));
             this.hitEffect();
             this.gameOver();
+            this.setBirdCollideGround(true);
+        }
+        else if (GameState.Current == GameState.GameOver) {
+            this.setBirdCollideGround(true);
         }
         return true;
     },
 
-    gameOver:function(){
+    gameOver: function () {
         cc.audioEngine.playEffect(res.sfx_die_ogg);
         this.setGameState(GameState.GameOver);
         var score = this.getChildByTag(TagOfLayer.Status).getScore();
@@ -86,7 +87,7 @@ var GamePlayScene = cc.Scene.extend({
         this.addChild(gameOverLayer);
     },
 
-    hitEffect : function () {
+    hitEffect: function () {
         cc.audioEngine.playEffect(res.sfx_hit_ogg);
 
         var overlay = new cc.LayerColor(
@@ -99,22 +100,20 @@ var GamePlayScene = cc.Scene.extend({
 
         overlay.runAction(new cc.Sequence(
             cc.fadeOut(0.2),
-            cc.callFunc(function(target){
+            cc.callFunc(function (target) {
                 target.removeChild(overlay);
             }, this)
         ));
     },
 
-    checkBirdPassPipes:function()
-    {
+    checkBirdPassPipes: function () {
         var animationLayer = this.mainLayer.getChildByTag(TagOfLayer.Animation);
         var backgroundLayer = this.mainLayer.getChildByTag(TagOfLayer.Background);
 
         for (var i = 0; i < backgroundLayer.pipeUpObjects.length; i++) {
             var pipe = backgroundLayer.pipeUpObjects[i];
             if (pipe.pipeType == PipeType.Up && pipe.passed == false) {
-                if(animationLayer.getBirdLeftEdgeX() > pipe.getLeftEdgeX())
-                {
+                if (animationLayer.getBirdLeftEdgeX() > pipe.getLeftEdgeX()) {
                     cc.audioEngine.playEffect(res.sfx_point_ogg);
                     pipe.passed = true;
                     this.getChildByTag(TagOfLayer.Status).addScore();
@@ -123,33 +122,32 @@ var GamePlayScene = cc.Scene.extend({
         }
     },
 
-    update : function(dt) {
+    update: function (dt) {
         this.space.step(dt);
 
         var animationLayer = this.mainLayer.getChildByTag(TagOfLayer.Animation);
         var distanceX = animationLayer.getDistanceX();
-        this.mainLayer.setPosition(cc.p(-distanceX,0));
+        this.mainLayer.setPosition(cc.p(-distanceX, 0));
 
         this.checkBirdPassPipes();
     },
-    getMainLayer:function(){
+    getMainLayer: function () {
         return this.mainLayer;
     },
 
-    setGameState:function(currentState)
-    {
+    setGameState: function (currentState) {
         GameState.Current = currentState;
 
-        if(GameState.Current == GameState.Play)
-        {
+        if (GameState.Current == GameState.Play) {
             this.getChildByTag(TagOfLayer.Status).hideInstructions();
             this.getMainLayer().getChildByTag(TagOfLayer.Animation).stopBirdUpDownAction();
             this.getMainLayer().getChildByTag(TagOfLayer.Background).setShouldLoadPipeObjects(true);
             this.space.gravity = cp.v(0, g_spaceGravity);
         }
-        else if(GameState.Current == GameState.GameOver)
-        {
-            this.getMainLayer().getChildByTag(TagOfLayer.Animation).stopBirdAllAction();
-        }
     },
+
+    setBirdCollideGround: function (birdCollideGround) {
+        var animationLayer = this.mainLayer.getChildByTag(TagOfLayer.Animation);
+        animationLayer.setBirdCollideGround(birdCollideGround);
+    }
 });

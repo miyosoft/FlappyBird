@@ -3,13 +3,13 @@
  */
 
 var Pipe = cc.Class.extend({
-    space:null,
-    sprite:null,
-    shape:null,
-    _mapIndex:0,// which map belongs to
+    space: null,
+    sprite: null,
+    shape: null,
+    _mapIndex: 0,// which map belongs to
 
-    pipeType:0,
-    passed:false,
+    pipeType: 0,
+    passed: false,
     get mapIndex() {
         return this._mapIndex;
     },
@@ -17,24 +17,17 @@ var Pipe = cc.Class.extend({
         this._mapIndex = index;
     },
 
-    /** Constructor
-     * @param {cc.SpriteBatchNode *}
-     * @param {cp.Space *}
-     * @param {cc.p}
-     */
-    ctor:function (layer, space, pos, pipeType, pipeWidth, pipeHeight) {
+    ctor: function (layer, space, pos, pipeType, pipeWidth, pipeHeight) {
         this.space = space;
         this.pipeType = pipeType;
 
-        if(this.pipeType == PipeType.Up)
-        {
+        if (this.pipeType == PipeType.Up) {
             this.sprite = new cc.PhysicsSprite(res.pipe_up_png, cc.rect(0, g_pipeTextureHeight - pipeHeight, g_pipeTextureWidth, pipeHeight));
         }
-        else
-        {
-            this.sprite = new cc.PhysicsSprite(res.pipe_down_png, cc.rect(0,0,g_pipeTextureWidth,pipeHeight));
+        else {
+            this.sprite = new cc.PhysicsSprite(res.pipe_down_png, cc.rect(0, 0, g_pipeTextureWidth, pipeHeight));
         }
-        this.sprite.setScaleX(pipeWidth/this.sprite.getContentSize().width);
+        this.sprite.setScaleX(pipeWidth / this.sprite.getContentSize().width);
 
         var body = new cp.StaticBody();
         body.setPos(pos);
@@ -51,19 +44,18 @@ var Pipe = cc.Class.extend({
         layer.addChild(this.sprite);
     },
 
-    removeFromParent:function () {
+    removeFromParent: function () {
         this.space.removeStaticShape(this.shape);
         this.shape = null;
         this.sprite.removeFromParent();
         this.sprite = null;
     },
 
-    getShape:function () {
+    getShape: function () {
         return this.shape;
     },
 
-    getLeftEdgeX:function(){
-        return this.sprite.getPositionX() - this.sprite.getBoundingBox().width/2;
-    },
-
+    getLeftEdgeX: function () {
+        return this.sprite.getPositionX() - this.sprite.getBoundingBox().width / 2;
+    }
 });

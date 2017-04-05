@@ -5,18 +5,18 @@
 var StatusLayer = cc.Layer.extend({
     tapSprite: null,
     readySprite: null,
-    scoreLabel : null,
-    score:0,
+    scoreLabel: null,
+    score: 0,
 
-    ctor:function(){
+    ctor: function () {
         this._super();
         this.init();
     },
 
-    init:function(){
+    init: function () {
         this._super();
 
-        var centerPos = cc.p(cc.winSize.width/2, cc.winSize.height/2);
+        var centerPos = cc.p(cc.winSize.width / 2, cc.winSize.height / 2);
 
         this.tapSprite = new cc.Sprite(res.tap_png);
         this.tapSprite.setPosition(centerPos);
@@ -32,23 +32,22 @@ var StatusLayer = cc.Layer.extend({
         this.addChild(this.scoreLabel);
     },
 
-    onEnter:function(){
+    onEnter: function () {
         this._super();
         var animationLayer = this.getParent().getMainLayer().getChildByTag(TagOfLayer.Animation);
-        animationLayer.setBirdStartPos(cc.winSize.width/2 - this.tapSprite.width/2, this.tapSprite.y);
+        animationLayer.setBirdStartPos(cc.winSize.width / 2 - this.tapSprite.width / 2, this.tapSprite.y);
     },
 
-    addScore:function(){
+    addScore: function () {
         this.score++;
         this.scoreLabel.setString(this.score.toString());
     },
 
-    getScore:function(){
+    getScore: function () {
         return this.score;
     },
 
-    hideInstructions:function()
-    {
+    hideInstructions: function () {
         this.tapSprite.runAction(new cc.FadeTo(0.5, 0));
         this.readySprite.runAction(new cc.FadeTo(0.5, 0));
     }
