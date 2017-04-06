@@ -100,8 +100,8 @@ var GamePlayScene = cc.Scene.extend({
 
         overlay.runAction(new cc.Sequence(
             cc.fadeOut(0.2),
-            cc.callFunc(function (target) {
-                target.removeChild(overlay);
+            cc.callFunc(function () {
+                this.removeChild(overlay);
             }, this)
         ));
     },

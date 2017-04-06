@@ -127,7 +127,7 @@ var GameOverLayer = cc.Layer.extend({
         this.scoreboardSprite.runAction(new cc.Sequence(
             cc.fadeOut(0),
             cc.fadeIn(0.1),
-            cc.callFunc(this.calcScore)
+            cc.callFunc(this.calcScore, this)
         ));
         cc.audioEngine.playEffect(res.sfx_swooshing_ogg);
     },
