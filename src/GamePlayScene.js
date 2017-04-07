@@ -80,7 +80,7 @@ var GamePlayScene = cc.Scene.extend({
     },
 
     gameOver: function () {
-        cc.audioEngine.playEffect(res.sfx_die_ogg);
+        cc.audioEngine.playEffect(res.sfx_die_mp3);
         this.setGameState(GameState.GameOver);
         var score = this.getChildByTag(TagOfLayer.Status).getScore();
         var gameOverLayer = new GameOverLayer(score);
@@ -88,7 +88,7 @@ var GamePlayScene = cc.Scene.extend({
     },
 
     hitEffect: function () {
-        cc.audioEngine.playEffect(res.sfx_hit_ogg);
+        cc.audioEngine.playEffect(res.sfx_hit_mp3);
 
         var overlay = new cc.LayerColor(
             new cc.Color(255, 255, 255, 200),
@@ -114,7 +114,7 @@ var GamePlayScene = cc.Scene.extend({
             var pipe = backgroundLayer.pipeUpObjects[i];
             if (pipe.pipeType == PipeType.Up && pipe.passed == false) {
                 if (animationLayer.getBirdLeftEdgeX() > pipe.getLeftEdgeX()) {
-                    cc.audioEngine.playEffect(res.sfx_point_ogg);
+                    cc.audioEngine.playEffect(res.sfx_point_mp3);
                     pipe.passed = true;
                     this.getChildByTag(TagOfLayer.Status).addScore();
                 }

@@ -19,11 +19,11 @@ var res = {
     shine_png: "res/images/shine.png",
     shine_plist: "res/images/shine.plist",
     score_fnt: "res/fonts/score.fnt",
-    sfx_swooshing_ogg: "res/sounds/sfx_swooshing.ogg",
-    sfx_wing_ogg: "res/sounds/sfx_wing.ogg",
-    sfx_hit_ogg: "res/sounds/sfx_hit.ogg",
-    sfx_point_ogg: "res/sounds/sfx_point.ogg",
-    sfx_die_ogg: "res/sounds/sfx_die.ogg"
+    sfx_swooshing_mp3: "res/sounds/sfx_swooshing.mp3",
+    sfx_wing_mp3: "res/sounds/sfx_wing.mp3",
+    sfx_hit_mp3: "res/sounds/sfx_hit.mp3",
+    sfx_point_mp3: "res/sounds/sfx_point.mp3",
+    sfx_die_mp3: "res/sounds/sfx_die.mp3"
 };
 
 var g_resources = [];

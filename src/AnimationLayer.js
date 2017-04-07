@@ -89,7 +89,7 @@ var AnimationLayer = cc.Layer.extend({
     },
 
     flapWings: function () {
-        cc.audioEngine.playEffect(res.sfx_wing_ogg);
+        cc.audioEngine.playEffect(res.sfx_wing_mp3);
         this.body.setVel(cp.v(this.body.vx, g_birdVelY));
         this.birdFlapY = this.sprite.y;
     },

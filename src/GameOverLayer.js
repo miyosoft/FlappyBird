@@ -116,7 +116,7 @@ var GameOverLayer = cc.Layer.extend({
             cc.fadeOut(0),
             cc.fadeIn(0.1)
         ));
-        cc.audioEngine.playEffect(res.sfx_swooshing_ogg);
+        cc.audioEngine.playEffect(res.sfx_swooshing_mp3);
     },
 
     showScoreboard: function () {
@@ -129,7 +129,7 @@ var GameOverLayer = cc.Layer.extend({
             cc.fadeIn(0.1),
             cc.callFunc(this.calcScore, this)
         ));
-        cc.audioEngine.playEffect(res.sfx_swooshing_ogg);
+        cc.audioEngine.playEffect(res.sfx_swooshing_mp3);
     },
 
     calcScore: function () {
@@ -213,7 +213,7 @@ var GameOverLayer = cc.Layer.extend({
         this.addChild(this.menu);
     },
     onRestart: function (sender) {
-        cc.audioEngine.playEffect(res.sfx_swooshing_ogg);
+        cc.audioEngine.playEffect(res.sfx_swooshing_mp3);
         GameState.Current = GameState.Ready;
         cc.director.runScene(new GamePlayScene());
     },

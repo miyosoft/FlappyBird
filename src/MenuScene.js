@@ -70,7 +70,7 @@ var MenuLayer = cc.Layer.extend({
     },
 
     onPlay: function () {
-        cc.audioEngine.playEffect(res.sfx_swooshing_ogg);
+        cc.audioEngine.playEffect(res.sfx_swooshing_mp3);
         cc.director.runScene(new GamePlayScene());
     }
 });
