@@ -35,6 +35,7 @@ if (typeof SpriteTag == "undefined") {
     SpriteTag.Bird = 0;
     SpriteTag.Pipe = 1;
     SpriteTag.Ground = 2;
+    SpriteTag.Ceiling = 3;
 }
 
 if (typeof PipeType == "undefined") {

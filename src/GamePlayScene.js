@@ -49,6 +49,16 @@ var GamePlayScene = cc.Scene.extend({
         ground.setFriction(0);
         this.space.addStaticShape(ground);
 
+        var ceiling = new cp.SegmentShape(this.space.staticBody,
+            cp.v(0, cc.winSize.height),// start point
+            cp.v(4294967295, cc.winSize.height),// MAX INT:4294967295
+            0);// thickness of wall
+
+        ceiling.setCollisionType(SpriteTag.Ceiling);
+        ceiling.setElasticity(0);
+        ceiling.setFriction(0);
+        this.space.addStaticShape(ceiling);
+
         this.space.addCollisionHandler(SpriteTag.Bird, SpriteTag.Ground,
             this.collisionGroundBegin.bind(this), null, null, null);
         this.space.addCollisionHandler(SpriteTag.Bird, SpriteTag.Pipe,
